@@ -28,7 +28,7 @@ class Geocode_Server(BaseHTTPRequestHandler):
 		try:
 			arg = parsed_path.query.split('=')
 
-			# If an invalid argument name is passed, return the standard response
+			# If an invalid argument name is passed, return an Error 404
 			if arg[0] != 'location':
 				self.send_error(404)
 				return
@@ -66,8 +66,7 @@ class Geocode_Server(BaseHTTPRequestHandler):
 			pass
 
 		
-		self.send_response(200)
-		self.end_headers()
+		self.set_headers()
 
 		try:
 			# Send the message if it exists
@@ -79,7 +78,7 @@ class Geocode_Server(BaseHTTPRequestHandler):
 	def do_POST(self):
 		self.set_headers()
 
-	# Implementation of POST protocol
+	# Implementation of HEAD protocol
 	def do_HEAD(self):
 		self.set_headers()
 
