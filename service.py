@@ -60,7 +60,7 @@ class Geocode_Server(BaseHTTPRequestHandler):
 						lng = result['Response']['View'][0]['Result'][0]['Location']['NavigationPosition'][0]['Longitude']
 						message = self.get_message(arg, lat, lng)
 					except IndexError:
-						print "Error"
+						print "Error, Address not found"
 
 		except IndexError:
 			pass
