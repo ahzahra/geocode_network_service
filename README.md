@@ -1,5 +1,5 @@
 # geocode_network_service
-Network service that can resolve latittude and longitude coordinates for a given address using the Google Maps geocoding service. The service provides an appropriate restful API to allow requests.
+Network service that can resolve latittude and longitude coordinates for a given address using the Google Maps geocoding service, and falls back onto the HERE geocoding service if Google Maps cannot successfulfully find the address. The service provides an appropriate restful API to allow requests.
 
 Requirements: Python 2.7.x, Internet Connection
 
