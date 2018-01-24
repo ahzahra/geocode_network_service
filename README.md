@@ -23,3 +23,13 @@ python client.py GET 4030 Baring Street Philadelphia
 ```
 
 The response to a successful GET request is returned in JSON format. 
+
+# Running the service with your own client
+
+The service responds to the following RESTful commands: GET, HEAD, and POST. To convert an address to it's lat and lng values, the GET function should be called with the following url:
+
+```
+http://localhost:8000/?location=ADDRESS
+```
+
+where ADDRESS is the url encoded address
