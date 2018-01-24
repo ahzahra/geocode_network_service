@@ -1,47 +1,45 @@
 import urllib
 import urllib2
-import json
 import sys
 from collections import OrderedDict
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import urlparse
+from service import SERVER_PORT, SERVER_NAME
+import httplib
 
-SERVER_NAME = ''
-SERVER_PORT = 8000
-ADDRESS = "4030 Baring Street, Philadelphia"
-
-# Google maps service request URL and KEY
-GOOGLE_API_KEY = "AIzaSyBz9aRVpgQKN9AdgrvPBINK5FQ_rwgbhpA"
-GOOGLE_URL = "https://maps.googleapis.com/maps/api/geocode/json" 
-
-# HERE location service request URL and KEYS
-APP_ID = "oTT08n7QAeiHNE2DAX1x"
-APP_CODE = "Uweq5cyflvvyq5aYLyYc0g"
-HERE_URL = "https://geocoder.cit.api.here.com/6.2/geocode.json"
+LOCAL_URL = "%s:%s" % (SERVER_NAME, str(SERVER_PORT))
 
 if __name__ == '__main__':
+	if len(sys.argv) == 1:
+		raise ValueError('Not enough input arguments, use -h as an argument to see a list of arguments that can be used')
+	if sys.argv[1] == '-h':
+		print "Run the program from the command line as follows: python client.py COMMAND ADDRESS"
+		print "Here's a list of possible COMMANDs: GET HEAD POST"
+		print "The Address can be something as the following: 4030 Baring Street"
+	elif not sys.argv[1] == "GET" and not sys.argv[1] == "POST" and not sys.argv[1] == "HEAD":
+		raise ValueError(sys.argv[1] + ' is an invalid command')
+	else:
+		if len(sys.argv) == 2:
+			raise ValueError('Not enough input arguments')
+		COMMAND = sys.argv[1]
+		ADDRESS = ''
+		# Concatenate string arguments to create a single string containing the Address
+		for i in range(2,len(sys.argv)):
+			if(i == 2):
+				ADDRESS = sys.argv[i]
+			else:
+				ADDRESS = ADDRESS + ' ' + sys.argv[i]
 
-	# Google service request test
-	# url = GOOGLE_URL + '?' + urllib.urlencode(OrderedDict([
-	# 	('address', ADDRESS),
- #        ('key', GOOGLE_API_KEY)
-	# 	]))
-	# response = str(urllib2.urlopen(url).read())
-	# result = json.loads(response.replace('\\n', ''))
-	# if result['status'] == 'OK':
-	# 	lat = result['results'][0]['geometry']['location']['lat']
-	# 	lng = result['results'][0]['geometry']['location']['lng']
-	# 	print lat, lng
+		# Generate the service request url 
+		path = '/' + '?' + urllib.urlencode(OrderedDict([
+			('location',ADDRESS),
+			]))
 
-	# HERE service request test
-	url = HERE_URL + '?' + urllib.urlencode(OrderedDict([
-		('app_id',APP_ID),
-        ('app_code', APP_CODE),
-        ('searchtext', ADDRESS)
-		]))
-	response = str(urllib2.urlopen(url).read())
-	result = json.loads(response.replace('\\n', ''))
-	lat = result['Response']['View'][0]['Result'][0]['Location']['NavigationPosition'][0]['Latitude']
-	lng = result['Response']['View'][0]['Result'][0]['Location']['NavigationPosition'][0]['Longitude']
-	print lat, lng
+		# print path
+		# Send the service request to server and read the response
+		conn = httplib.HTTPConnection(LOCAL_URL, timeout=10)
+		conn.request(COMMAND, path)
+		r1 = conn.getresponse()
+		print r1.read()
+
+
+
 
